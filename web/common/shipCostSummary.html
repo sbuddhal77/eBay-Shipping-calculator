@@ -1,0 +1,84 @@
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+p{
+font-weight:bold;
+font-size:25;
+text-align : center;
+text-transform: uppercase;
+}
+
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    text-transform: uppercase;
+}
+
+td{
+	text-align: left;
+	width: auto;
+	font-size : 12px;
+	padding: 8px;
+	font-weight: italicize;
+
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+
+<div class="summary">
+  
+        <p class="alert alert-info">Shipping Cost Summary</p>
+        
+        <div class = "packageDetails">
+        
+        <table>
+        <tr>
+        <th> Type </th>
+        <th> Dimensions </th>
+        <th> Weight </th>
+        <th> Your ZIP Code </th>
+        <th> Destination ZIP Code </th>
+        </tr>
+        
+        <tr>
+        <td>{{ packageType }} </td>
+        <td> {{ length }} in. x {{ width }} in. x {{ height }} in. </td>
+        <td> {{ weight }} lbs </td>
+        <td> {{ src_zip_code }} </td>
+        <td> {{ dest_zip_code }} </td>
+        </tr>
+        
+        
+        </table>
+        
+        
+        </div>
+        
+       <br>
+                  
+  <ul class="nav nav-pills" role="tablist">
+ 	
+ 	 
+    
+    <li><a ui-sref="fedex"> <img src="data:image/png;base64,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" width="60" alt="FedEx Logo" /></a></li>
+   
+    <li><a ui-sref="usps"> <img src="http://www.postalconnectionsyork.com/app/uploads/2016/11/USPS.jpg" width="60" alt="USPS Logo" /></a></li>
+    
+    <li><a ui-sref="ups"><img src="https://wba-wpengine.netdna-ssl.com/wp-content/uploads/2016/05/UPS-Logo-1024x576.jpg" width="110" alt="UPS Logo" /></a></li>
+    
+    <li><a href="#"><img width = "50" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAk1BMVEX/AAD/////fX3/9vb/jIz/uLj//Pz/xsb/m5v/RET/y8v/+vr/v7//ysr/Pz//QkL/q6v/Nzf/JCT/r6//7e3/1dX/OTn/6Oj/MzP/Li7/HR3/2tr/EhL/Skr/gYH/ISH/Zmb/n5//bGz/UVH/k5P/pqb/X1//dnb/iIj/kJD/tLT/cXH/4uL/DQ3/Tk7/2Nj/WlpvL1Z9AAAJWElEQVR4nO2daXuySgyGZ0SRCrUWUFSsdbe12rf//9cd3KpsQyCZM0B9vvaSK3dnySxJhvFs6bp5k1YGnU3RdYDxnGX83XT3HeNr9rN8e+mOAtnjoyZMoQ7jsT0cPC1njZXT2XsuhlD3LWMzVkmTrUFj1xdCCgg9y3hTbT9I9tTxCxB685mt2nS4lp/9nISasVQ61vKr29jnIVwPD6otzi/bABP636qNLahuUleNE7rzivXPOx1W8Wk1RtifqTYTpcW/LEKrqj30qu+WmNAZqrYQLbsnIpyXfAED0nieTriuAyBjEyONsFcPwGBKnScTtiq0SsvQYa0nEHYGqu0i1NiKE7oz1VaR6smPETZV20SsmRkhbKm2iFzzMKFZn1nmqokXIvxQbY8Eze4J+++qzZGgiXMjNBeqrZGijfZLaI1UGyNFdutKqDVU2yJJW+1C+Pyq2hRJGllnQt1QbYk0GfqJcL9UbYg0/exPhJZqOySqfSTUPlWbIVErLSD0nlSbIVFPXkDoq7ZCqvyAcKfaCKlqcaZvVRshVQ2dmXU6vIhraDJNtQ2SpT0IKy+39oRe7Qn3AWO95deesM/qvWhj7Jn9U22CZD0HrVhvtQPGeqv1IKy8WqzOpzRH7Vj9rtXC6j0IK6/6E66Zo9oEyZoHrVhvGQ/CyssIRmK9ZbD6Xh6e1XwQ5tJo8THFBj28b5sNytswUsKZ5WlaGxe5srBcze18EVnEaAkb5zArb4XIRmlevkEXo0VIuNIuoXLaumjCxmF+/YZJZhYd4fou8HhXbDDazt03qFaTVIQh4zi3ikToDMOZEi2aQK0mI4lTGO4iCavt/HkbIyv8CW6R3GxOGUVscLdl8qh53ZzfeI0Cct2i8BoNCsJBKyHluJ3PvG4M8IiY99+UIApCOwmQ8+c8KbYv7aRP6ARBkxSEyYAB4gv4E4NEQE4Rr0VA6KQYx3kH2sle0wA5PhYGT5icmnpWHzYWux3BN7C7OzThR2wWDSFCWvFVBMhNzCKQ4Qm/PJF1QUfNbsXUMXiRiwtpQhK+pWbBX5U5oz5lAAYdARX/iiT8FPZRCGI2INdXGBNxhONdpnkBoqijdrMBkWmDjWDdVlx2NKs4UQKnIXATd0L5/QZDZSKssnspFzgNoZv4FS7SHkkIM5H3k1c3A+CvURVWkIRskeEtRIiDZ9BvPdyhDZaQTbVsGwN14u2QvNiOSUMuSdCErAmyk3eitRoAbuIk5JKGgFC4ML1HDLcisAXRy1IKwkkv284T4r3TgLmJYGuBLhFAQMgm62xLj7qbboBzMHfwhWQoCJntgAqn3fwiEFCnOG4jIWSj6FFbGuK5o4q3S3eAFFmDNITJZ1EJOk030EmG4hyKjDB6mpuO+A12EzTHpWSEwEV4gLiFAhLlJpMR3tfaEEqD9ednqhIIdIRsDGxFkCyyGg+EhGknw4UA6dLnKQmD6YYGUSeaZE4iJQQ7jSxAEjdxES0h2GkIRQpITchGeESLtmQcNSHYaaTqmbjMCjkhe8chtqlLAdETglc3iaKvsiKBEOE0SN3ERTII2WtBRFo3cZEUwgCxEKEMQEmExfxioSCcTEkiLOI0qN3ERbII8zsNsu1SRNII826m6LZLEckjzOc05IzBoyQSBjMq6O6NS3ITF8kkZEPY5RLnfYnVR6QSvmTGMVzkS3yDQSbhSxs8EBMu36gkkRB6+XJGlDYQ5RFCL18uAgaI5Zc0wpyAqXf9aMkiBF6+hBDldFRJhNDLl5DkTDdyCKGXL1FEGe8ySCEs1IKyWlEGYVY4pQiRfrqRQAgMBEoW/YxKT5jbTUQQqf0iOWEBNxFBJHYa1ISgeFGxAIHTeURMWNBNhJUrFSVTtIQkgMSIpIQEXfSCSNhRKQlzbZfEItxMERIi3URYdE6DjhAayuXBjqfInAYZIXSpZs2gAWJEqxsqwhyxatBrG6IZlYgQHKt2PPiFXtvQINIQxnN4k9U5H91Dr23aFGORhDCWhZ3WKNe7Cei1TZvgrJ+CcAi017pdn0GvbQgQCQiBkQl66PJlBJxR8ZELeMJJeh5wGDA8qKB3/S1ssD6aMPQQn6gxorMG1Gn0kOH6aEJY9lpSSDPQaZhznIFYwkbWy+ZntZOGkw2boVxMhiSaMDsP+KSUO3qg0/CRecAowjnIRCstygLoNNaY5K7/IUtWF4RTwpwGMksWk94H8RTiO3pQOMMOE2mDzFb/yM6vzAhCAAROm6giQUjC7PPtzGjDbL+I2yliq0YcH8USAmYPoazB7M1QFqIrf2yF/RQUyiXeTJk4d4gnZFNRC8JCuYROA1upi6ACzyptqoAnSAqybZBrNpoqSuvkpanegqcVpDkNHV+XjoJwnIiYLwN0kJiFajr4iEWSamajXgJizhTXYcLiwdwRJJeQECYh5i6daMcQdYcie6ZBU1VwvI50sgJ59LG8/h1JUO2UqvZluLKCU+TsYTIPfYOohDNddc+7ol+aUXC7s7otH8iefyWs0Dq9FnJxP4vu5w5N9/cbVGZRVtldnDf8PmZPvf2H/0ZYpJWSlz3fdXc/qG/89DzNszZEFjHqatfj5WKGnQDHm68ZZeD+o2J59dX8A28jPAirrr9AWP+XdOr+GlL933t6EFZfPdZWbYJk7f7AC48Pwqqr9Qdey63/i8d1f7W68wdeHndVmyBZPtNUmyBZ+9oTerUn1B6ElZfGTIlVN0qgV5PpFJfA5dVWZ7zeG8QdZ3yv2gip8gNCF3cdVm49eQGhXuc3jz+1gJB3kC9IlFltfiREhjeWWcfgUEYX11FCGfqZUEK9jXJoeEyLPBJig1RLq1N475GwyMuvVZB9ejTtRMhxb2mXVRvzRuiTFygugexzIsGZkNdx+b3l94Ra/UbiyA0REjxLWzZdEwCuhLXrp1M9Sliztdvm91G/X0J5tRlVaHSrQ3IjTE5lrabuE3DvCDnFI2ClUCju/54wfwpBOWWHov5DhPVoxXE4cyNMSP0EigpF8xkjhLxT9XOp72ipnCgh3+Me+lathR8FihFyc45/OFKVJvN4jlmcMGjGTTUZJ5tYA6YQct5bVu+E8fCd/ORrMiF3jU21GA8bI+V56RTCoKs6X+iXav83vW+d1LT5VMJgt9FZV+Nu8W3dERSRERAeSwD6zqzcLTmeOb4nLDwhJDzKNF3LaE4b5dO0aViumVnj6D86O3mAFngWZgAAAABJRU5ErkJggg==" alt="Close"></a></li>        
+  </ul>
+  
+  <br> <br>
+  
+  <div ui-view></div>
+  
+</div>
