@@ -1,0 +1,232 @@
+var app = angular.module('cisco',['ngSanitize','ngTouch','ngAnimate', 'ngIdle','ngCookies','ui.select','ui.router','angular-loading-bar','ngDialog','ui.grid', 'ui.grid.saveState', 'ui.grid.exporter','ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.pinning', 'ui.bootstrap', 'ui.grid.autoResize' ]);
+
+
+app.config(function($stateProvider, $urlRouterProvider) {
+
+            $urlRouterProvider.otherwise('/shippingForm');
+
+            $stateProvider
+                .state('shippingForm', {
+                    url: '/shippingForm',
+                    templateUrl: 'Common/shippingForm.html',
+                  //  templateUrl: 'Common/accountRequest.html',
+                   controller: 'MainController'
+                   
+                })
+                .state('shipCostSummary', {
+                	 url: '/shipCostSummary',
+                   params:{packageType:null,length:null,width:null,height:null,weight:null,src_zip_code:null,dest_zip_code:null},
+                   templateUrl: 'Common/shipCostSummary.html',
+                    controller: 'shipcostctrl'
+                 
+                })
+                 .state('fedex', {
+                	url: '/',
+                   // template: 'Ship Cost FedEx Summary Page',
+                    parent: 'shipCostSummary',
+                   templateUrl: 'Common/summary_Carrier1.html',
+                  controller: 'shipcostctrl'
+                   
+                })
+                 .state('usps', {
+                    url: '/',
+                 //   template: 'Ship Cost USPS Summary Page',
+                    parent: 'shipCostSummary',
+                    templateUrl: 'Common/summary_Carrier1.html',
+                    controller: 'shipcostctrl'
+                   
+                })
+                 .state('ups', {
+                    url: '/',
+               //    template: 'Ship Cost UPS Summary Page',
+                   parent: 'shipCostSummary',
+                 templateUrl: 'Common/summary_Carrier1.html',
+                    controller: 'shipcostctrl'
+                   
+                });
+                
+               
+        });
+        
+        
+app.controller('shipcostctrl', ['$scope','$window','$http','$location',"ngDialog",'$state','$stateParams',function($scope,$window,$http,$location,ngDialog,$state,$stateParams)
+{
+	
+	 $scope.packageType = $stateParams.packageType;
+	    $scope.length = $stateParams.length;
+	    
+	    $scope.width = $stateParams.width;
+	    $scope.height = $stateParams.height;
+	 
+	    $scope.weight = $stateParams.weight;
+	    $scope.src_zip_code = $stateParams.src_zip_code;
+	 
+	    $scope.dest_zip_code = $stateParams.dest_zip_code;
+	    
+	    var current_state = $state.current.name;
+	    
+	    //alert('Current State active is: '+ curr);
+	    
+	    
+	    $scope.gridDefs = [
+			                 { field: 'CARRIER_NAME', displayName: 'CARRIER', width: 150,enableFiltering: true},
+	                     { field: 'CARRIER_SERVICE_TYPE', displayName: 'CARRIER SERVICE TYPE', width: 250,visible:true },
+	                     { field: 'CARRIER_SERVICE_NAME', displayName:'CARRIER SERVICE NAME',width:250,visible:true },
+	                     { field: 'SOURCE_ZIP_CODE', displayName: 'SOURCE ZIP CODE', width: 250,enableFiltering: true },
+	                     { field: 'DESTINATION_ZIP_CODE', displayName: 'DESTINATION ZIP CODE', width: 200 ,enableFiltering: true},
+	                     { field: 'SHIP_COST', displayName:'TOTAL SHIPPING COST',width:150,cellFilter: 'number:2',
+	                    	    cellClass:'currency',enableFiltering: true },
+	                   
+	                     ]; 
+	    
+	    $scope.gridOptions = {
+			    saveFocus: false,
+			    saveScroll: true,
+			    enableFiltering:true,
+			    //enableRowHeaderSelection: false,
+			    //columnDefs: $scope.gridDefs,
+			    //data: $scope.data,
+			    enableGridMenu: true,
+			    showGridFooter:true,
+			    rowHeight: 35,
+			    exporterExcelFilename: 'ShippingCostSummary.xlsx',
+			    exporterExcelSheetName: 'Sheet1',
+			     onRegisterApi: function(gridApi){ 
+			      $scope.gridApi = gridApi;
+			     }
+		};
+	    
+	    $scope.data_fedex = [];
+	    $scope.data_usps = [];
+	    $scope.data_usp = [];
+	    
+	    if(current_state != 'shipCostSummary')
+	    {
+		  $http({
+	      method: 'GET',
+	      url: './shippingCostService',
+	      params: { 
+	    	  
+	    	  'packageType' : $scope.packageType,
+	    	  'length'  : $scope.length,
+	    	  'width' : $scope.width,
+	    	  'height'  : $scope.height,
+	    	  'weight' : $scope.weight,
+	    	  'source_zip_code' : $scope.src_zip_code,
+  		  'dest_city'  : $scope.cityList.selected,
+		      'dest_zip_code': $scope.dest_zip_code,
+		      'carrier_name': current_state
+			  
+	      },
+	      headers: {'Content-Type': 'application/json'}
+	  	}).success(function(data) {
+	  			
+	  		$scope.gridData = data;
+		    
+	      
+	     	// $scope.closeProgressBar();
+	     	 
+	     	 
+	  		$scope.gridOptions = {
+				   columnDefs: $scope.gridDefs,
+				  data:$scope.gridData,
+				  enableFiltering:true
+				  	    				    
+				  };
+	  		
+	  }).error(function(data,status,header,config){
+		 
+		  console.log(status);
+		  console.log(header);
+	  }); 
+	    }
+	    
+	
+}]);
+
+app.controller('MainController', ['$scope','$window','$http','$location',"ngDialog",'$state',function($scope,$window,$http,$location,ngDialog,$state) {
+	
+	  
+	$scope.cities = ["Anchorage","Atlanta","Boston","Chicago","Denver","Honolulu","Houston","Kansas","Las Vegas","Los Angeles","Miami","New York City","Philadelphia","Phoenix","San Francisco","Seattle","Washington D.C."];
+	
+	$scope.packageType = {
+			selected: 'Letter'
+	};
+	
+	$scope.cityList = 
+		{
+			selected:''
+		};
+	
+	 $scope.openProcessReqBar = function () {
+	    	
+	    	$scope.processDialog = ngDialog.open({
+	    			template : 'templates/processRequestIndicator.html',
+	    				className : 'ngdialog-theme-default ngdialog-theme-custom',
+	    				closeByEscape : false,
+	    					showClose : false,
+	    					overlay: true,
+	    				closeByDocument: false,
+	    					scope : $scope
+	    		});
+	    		}; 		
+
+	    		$scope.closeProcessReqBar = function(){
+	    			$scope.processDialog.close();
+	    		};
+		 
+	
+	 $scope.validateForm = function(event) {
+			
+			var ProcessRequest = 0;
+			$scope.required = false;
+			
+		//	$window.alert("Inside ValidateForm");
+		 
+		  if(event.weight ==null || event.weight == 0) 
+		  {
+		
+		  $window.alert("Please Enter Weight");
+		  $scope.required = true;
+		  ProcessRequest = 0;
+		  return;
+		  }
+		 
+		  else if(event.src_zipCode==null || event.src_zipCode == '') 
+		  {
+			  
+			  $window.alert("Please Enter Source Zip Code");
+			  $scope.required = true;
+			  ProcessRequest = 0;
+			  return;
+		  }
+		  
+		  else if(event.dest_zip_code==null || event.dest_zip_code == '') 
+		  {
+			  
+			  $window.alert("Please Enter Destination Zip Code");
+			  $scope.required = true;
+			  ProcessRequest = 0;
+			  return;
+		  }
+		  
+		  else{
+			  ProcessRequest = 1;
+		  }
+		  
+		 if(ProcessRequest == 1)
+			  {
+			  	  var src_zip_code = $scope.src_zipCode;
+						  
+		$state.go('shipCostSummary', {packageType:$scope.packageType.selected,length:$scope.length,width:$scope.width,height:$scope.height,weight:$scope.weight,src_zip_code:src_zip_code,dest_zip_code:$scope.dest_zip_code});
+			 
+			//$state.transitionTo('shipCostSummary',$stateParams);
+			  
+
+			  }
+	
+	 }
+}]);
+
+	
+	
