@@ -1,0 +1,266 @@
+package org.com.ebay;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonMethod;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import com.google.gson.Gson;
+
+@WebServlet("/shippingCostService")
+public class shippingCostService extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	ConnectionClass con_obj=new ConnectionClass();
+       
+    public shippingCostService() {
+        super();
+
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String packageType = "";
+		
+		String length = "";
+		String width = "";
+		String height = "";
+		
+		int weight = 0;
+		String src_zip_code = "";
+		String dest_city = "";
+		String dest_zip_code = "";
+		
+		String dest_loc_param = "";
+		
+		String carrier_name = "";
+		
+		packageType = request.getParameter("packageType");
+		
+		if(request.getParameter("carrier_name")!=null)
+		{
+			carrier_name = (String) request.getParameter("carrier_name");
+		}
+		
+		if(request.getParameter("length")!= null)
+		{
+			length = request.getParameter("length");
+		}
+		
+		if(request.getParameter("width")!= null)
+		{
+			width = request.getParameter("width");
+		}
+		
+		if(request.getParameter("height")!= null)
+		{
+			height = request.getParameter("height");
+		}
+		
+		if(request.getParameter("weight")!= null)
+		{
+			weight = Integer.parseInt(request.getParameter("weight"));
+		}
+		
+		if(request.getParameter("source_zip_code")!= null)
+		{
+			src_zip_code = request.getParameter("source_zip_code");
+		}
+		
+		if(request.getParameter("dest_city")!= null)
+		{
+			dest_city = request.getParameter("dest_city");
+		}
+		
+		if(request.getParameter("dest_zip_code")!= null)
+		{
+			dest_zip_code = request.getParameter("dest_zip_code");
+		}
+		
+		if(dest_city.isEmpty()){
+			dest_loc_param = dest_zip_code;
+		}
+		
+		else
+		{
+			dest_loc_param = dest_city;
+		}
+		
+		err_object UI_RET_MSG;
+		
+		try{
+			
+			UI_RET_MSG = new err_object();
+			
+			System.out.println("Connection to be established");
+		
+		  Connection con = null;
+	         con = con_obj.getConnectionDem();
+	         
+	         System.out.println("Connection has been established");
+	         
+	         System.out.println("Carrier Name is: "+carrier_name);
+	         
+	         List<ship_cost_summary> json_ship_cost = new ArrayList<ship_cost_summary>();
+	         
+	         ship_cost_summary rec;
+	         
+	         
+	         int lane_exist = 0;
+	         //Check if there is a lane b/w source & destination location
+	         
+	         System.out.println("To run SQL");
+	         
+	         System.out.println(" Source Zip Code: "+src_zip_code);
+	         
+	         System.out.println(" dest Zip Code: "+dest_zip_code); 
+	         
+	         PreparedStatement stmt = con.prepareStatement("select COUNT(*) FROM LOCATION_MAPPING WHERE SOURCE_ZIP_CODE = '"+ src_zip_code+"' AND DESTINATION_ZIP_CODE = '"+dest_zip_code+"'");
+	         ResultSet rs;
+	         rs = stmt.executeQuery();
+	         
+	         System.out.println("SQL query ran");
+	       
+	         while(rs.next()){
+	        	 lane_exist = rs.getInt(1);
+	         }
+	       
+	        	 System.out.println("Lane Exists flag: "+lane_exist);
+	         
+	         if(lane_exist > 0)
+	         {
+	        	 //location mapping exist.. Go ahead and fetch shipping cost details
+	        	  PreparedStatement stmt2 = con.prepareStatement("SELECT CARRIER_NAME, CARRIER_SERVICE_TYPE, CARRIER_SERVICE_NAME, SOURCE_ZIP_CODE, DESTINATION_ZIP_CODE, MINIMUM_SHIP_COST + ("+weight+"-1) * 0.25 * MINIMUM_SHIP_COST AS TOT_SHIP_COST FROM CARRIER_SHIPPING_COST WHERE UPPER(CARRIER_NAME)= UPPER('"+carrier_name+"') and SOURCE_ZIP_CODE = '"+ src_zip_code+"' AND (DESTINATION_ZIP_CODE = '"+dest_zip_code+"')");
+	 	         ResultSet rs1;
+	 	         rs1 = stmt2.executeQuery();
+	 	         System.out.println("Converting records into Java object");
+	 	        while (rs1.next()) {
+		        	 
+		        	 rec = new ship_cost_summary();
+		        	 
+		        	 rec.setSummary(rs1.getString("CARRIER_NAME"), rs1.getString("CARRIER_SERVICE_TYPE"), rs1.getString("CARRIER_SERVICE_NAME"), 
+		        			 rs1.getString("SOURCE_ZIP_CODE"),rs1.getString("DESTINATION_ZIP_CODE"), rs1.getDouble("TOT_SHIP_COST"));
+		        	 json_ship_cost.add(rec);
+		         }
+		         
+		         ObjectMapper mapperObj = new ObjectMapper();
+		         
+		         mapperObj.setVisibility(JsonMethod.FIELD, Visibility.ANY);
+		         
+		         
+		             // get Employee object as a json string
+		             String jsonStr = mapperObj.writeValueAsString(json_ship_cost);
+		         
+		             System.out.println(jsonStr);
+		        
+		         
+		     	
+		     	response.setContentType("application/json");
+		     		response.getWriter().write(jsonStr);
+	        	 
+	         }
+	         
+	         else{
+	        	 
+	        		PrintWriter resp = response.getWriter();
+		        	   
+	       	 		UI_RET_MSG.set_msg_UI("No carrier offers shipping services between your source & destination location");
+		        	   
+	       	 		UI_RET_MSG.set_err_code(1);
+		        	   
+	       	 		String json = new Gson().toJson(UI_RET_MSG);
+		                response.setContentType("application/json");
+		                resp.write(json);
+		        	   
+		                resp.flush();
+		                resp.close();
+	               	   
+	               	    return;
+	         }
+		
+		}catch(Exception e)
+		{
+			System.out.println("Found an exception: "+e);
+		}
+	         
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+}
+
+
+class err_object
+{
+	int err_code;
+	String message;
+	
+	err_object()
+	{
+		err_code = 0;
+		message = "";
+		
+	}
+	
+	void set_msg_UI(String message)
+	{
+		
+		this.message = message;
+	}
+	void set_err_code(int err_code)
+	{
+		this.err_code = err_code;
+	}
+	
+}
+
+class ship_cost_summary
+{
+	String CARRIER_NAME;
+	String CARRIER_SERVICE_TYPE;
+	String CARRIER_SERVICE_NAME;
+	String 	SOURCE_ZIP_CODE;
+	String DESTINATION_ZIP_CODE;
+	double SHIP_COST;
+	
+	ship_cost_summary()
+	{
+		CARRIER_NAME = "";
+		CARRIER_SERVICE_TYPE = "";
+		CARRIER_SERVICE_NAME = "";
+		SOURCE_ZIP_CODE = "";
+		DESTINATION_ZIP_CODE = "";
+		SHIP_COST = 0.0;
+	}
+	
+	public void setSummary(String CARRIER_NAME,String CARRIER_SERVICE_TYPE,
+	String CARRIER_SERVICE_NAME,
+	String 	SOURCE_ZIP_CODE,
+	String DESTINATION_ZIP_CODE,
+	double SHIP_COST)
+	{
+		this.CARRIER_NAME = CARRIER_NAME;
+		this.CARRIER_SERVICE_NAME=CARRIER_SERVICE_NAME;
+		this.CARRIER_SERVICE_TYPE=CARRIER_SERVICE_TYPE;
+		this.SOURCE_ZIP_CODE=SOURCE_ZIP_CODE;
+		this.DESTINATION_ZIP_CODE=DESTINATION_ZIP_CODE;
+		this.SHIP_COST=SHIP_COST;
+			
+	}
+	
+}
