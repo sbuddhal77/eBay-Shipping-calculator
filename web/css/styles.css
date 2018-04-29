@@ -1,0 +1,300 @@
+div.container {
+    width: 100%;
+	
+    border: 1px solid gray;
+    
+}
+
+p{
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+	font-weight: bold;
+	text-transform:uppercase;
+}
+
+label{
+	
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+	font-style:italic;
+}
+.summary{
+	
+	width: auto;
+	padding-bottom: 10px;
+}
+
+.grid
+{
+	
+	height: 250px;
+}
+
+
+
+body {
+
+padding-top:0px;
+}
+
+header{
+	width:100%;
+}
+
+footer {
+    padding: 25px;
+    color: green;
+	width:100%;
+    background-color: lightgrey;
+    clear: left;
+    text-align: center;
+}
+
+.sessTmeOutBody { 
+	font-family: 'ciscosansttextralight';
+	text-align: center;
+ }
+.sessTmeOutHeader h3,.sessTmeOutBody p, .sessTOWarnHeader h3{
+	font-family: 'ciscosansttextralight';
+	font-weight:bold;
+	text-align: center;
+}
+.sessTmeOutBody .logBackIn{
+	font-family: 'ciscosansttextralight';
+	background: #049FD9;
+	border: 1px solid #049FD9;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 10px;
+	position: relative;
+	text-decoration: none;	
+    top: 12px;
+}
+.logBackIn:hover{ color: white;}
+
+
+nav {
+   float: left;
+   padding-top:100px;
+   padding: 2em;
+   /*border-right: 4px solid gray; */
+   line-height: 80px; 
+   display: inline-block;
+}
+
+nav span {
+	
+	font-weight: bold;
+	font-size: 20px;
+	float: middle;
+	padding: 2em;
+	text-transform: uppercase;
+}
+
+nav ul {
+    list-style-type: square;
+    padding: 0;
+}
+   
+nav ul a {
+   
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.shipping_calc {
+	width: 75%;
+    margin-left: 100px;
+   min-height: 500px;
+    padding: 1em; 
+    overflow: hidden;
+    border-left: 4px solid gray;
+	
+}
+.reqIDLink
+{
+	font-weight : bold;
+	padding : 0.5em;
+	font-size : 15px;
+	text-align: center;
+}
+
+.alert-text{
+	
+	font-weight:bold;
+	font-size:18px;
+	color: 'red';
+	text-transform :'uppercase';
+	text-align: center;
+}
+
+.apptitle {
+    font-family: Comic Sans MS, cursive, sans-serif;
+    color: #58585b;
+    font-size: 25px;
+    padding: 0px 0px 0px 400px; 
+    float: left;
+    margin-top:10px;
+}
+
+.appheader {
+   /* float: left; */
+    width: 100%;
+    text-align : center;
+    background-color: lightgrey;
+	/*padding: 1em; */
+	clear: left;
+	padding-top: 5px; 
+}
+
+.marginT15 {margin-top: 15px !important;}
+
+.logo {
+    float: left;
+    padding: 15px 10px 10px 15px
+}
+
+.typeSelect
+{
+	width: 30%;
+	padding: 10px;
+}
+
+
+
+.cityselect
+{
+	width: 30%;
+}
+
+.contgray {
+    font-family: ciscolight;
+    color: #58585b;
+    font-size: 14px;
+}
+
+
+#packageDetails{
+	
+	width: auto;
+	
+	border: 0px;
+	
+	border:1px solid #cecece;
+	
+	background-color:rgba(192,192,192,0.3);
+		
+		
+	
+}
+
+#destDetails
+{
+	width: auto;
+	
+	border: 0px;
+	
+	border:1px solid #cecece;
+	
+	background-color:rgba(192,192,192,0.3);
+	padding-top: 10px;
+	padding-bottom:10px;
+}
+
+.carrierService{
+	width: auto;
+	border: 1px;
+	padding-top: 2cm;
+}
+
+#userDetails
+{
+	width: auto;
+	border: 0px;
+	
+	border:1px solid #cecece;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	
+	background-color:rgba(192,192,192,0.3);
+}
+
+
+ui-select
+{
+	width: 30%;
+}
+
+#dimensions{
+	width:auto;
+	border:1px solid #cecece;
+	padding: 1em;
+	
+}
+
+.currency
+{
+	text-align:center;
+	
+}
+
+.currency .ui-grid-cell-contents:before{
+    content: '$';
+    float: left;
+}
+
+.userinfo {
+    float: right;
+    padding: 10px 15px 6px 0px;
+    text-align: right;
+}
+
+
+
+.hdrbottomborder {
+    width: 100%;
+    height: 4px;
+    background-color: #0b9ed9;
+    clear:both
+}
+
+#status-buttons                 {  }
+#status-buttons a               { color:MediumSeaGreen; display:inline-block; font-size:16px; margin-right:10px; text-align:center; text-transform:capitalize; }
+
+#status-buttons span            { background:#080808; display:block; height:30px; margin:0 auto 10px; padding-top:5px; width:30px; 
+    border-radius:50%; }
+
+/* active buttons */
+#status-buttons a.active span   { background:#00BC8C; }
+
+
+.pgfooter {
+    width: 84%;
+    z-index: -1;
+    /*float: left;*/
+    width: 100%;
+    height: 40px;
+    box-shadow: inset 0px 0px 1px 1px #dfdfdf;
+    position: fixed;
+    bottom: 0px;
+    background: #ddd;
+    padding: 10px 10px 0 0;
+}
+
+.contcopyright {
+    font-family: ciscolight;
+    color: #58585b;
+    font-size: 10px;
+    margin-right: 20px;
+    float: right;
+    text-align: right;
+}
+
+.centertext {
+    float: left;
+    text-align: left;
+    margin-left: 45%;
+    padding-top: 0px;
+    font-size: 12px;
+    cursor: pointer;
+}
